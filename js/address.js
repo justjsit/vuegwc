@@ -1,0 +1,45 @@
+var vm=new Vue({
+	el:".container",
+	data:function(){
+		return{
+			addressList:[],
+			addressNum:3,
+			currentIndex:0,
+			isChecked:1
+		}
+	},
+	created:function(){
+		this.getAddress();
+	},
+	computed:{
+		newAddress:function(){
+			return this.addressList.slice(0,this.addressNum);
+		}
+	},
+	methods:{
+		getAddress:function(){
+			var _this=this;
+			$.ajax({
+				type:"get",
+				url:"data/address.json",
+				async:true,
+				dataType:"json",
+				success:function(data){
+					_this.addressList=data.result;
+				}
+			});
+		},
+		moreAddress:function(){
+			this.addressNum=this.addressList.length;
+		},
+		setDefault:function(addressId){
+			this.addressList.forEach(function(val,index){
+				if(val.addressId==addressId){
+					val.isDefault=true;
+				}else{
+					val.isDefault=false;
+				}
+			})
+		}
+	}
+})
